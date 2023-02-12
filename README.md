@@ -58,9 +58,10 @@ Setup
 -----
 **Requirements**: python version 3.11+
 
-> git clone <repo>  
-> cd <local repo destination>  
+> git clone [repo]  
+> cd [local repo destination]  
 > python -m pip install -r requirements.txt
+> set PYTHONPATH=%PYTHONPATH%;[local repo destination]
 
 ## Run server
 

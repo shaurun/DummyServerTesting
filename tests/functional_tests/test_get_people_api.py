@@ -20,7 +20,7 @@ def id(request):
 def response(origin, id):
     logging.info(f"curl -i -X GET '{origin}{endpoint}{id}'")
     response = requests.get(f"{origin}{endpoint}{id}")
-    logging.info(response.text)
+    logging.debug(response.text)
     return response
 
 

@@ -41,7 +41,7 @@ def get_starship_info(id):
 
 
 def read_server_configs_from_config_file() -> ServerConfigs:
-    with open("configs/server_configs.yaml", 'r') as stream:
+    with open(os.path.join(os.path.dirname(__file__), "configs/server_configs.yaml"), 'r') as stream:
         configs = yaml.safe_load(stream)
         return ServerConfigs(host=configs.get("host"),
                              port=configs.get("port"),

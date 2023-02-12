@@ -18,8 +18,9 @@ def id(request):
 
 @pytest.fixture(scope="class")
 def response(origin, id):
-    logging.info(f"curl -X -i GET '{origin}{endpoint}{id}'")
+    logging.info(f'curl -X -i GET "{origin}{endpoint}{id}"')
     response = requests.get(f"{origin}{endpoint}{id}")
+    logging.debug(response.text)
     return response
 
 

@@ -40,16 +40,15 @@ class TestGetPeopleEndpointPerformance:
         def request_job(origin, id, event):
             logger = logging.getLogger(name=f"Client_{id}")
             logger.info(f"Client_{id} starts spamming {origin}{endpoint}{id}")
-            while not event.isSet():
-                logger.info(f"curl -i -X GET '{origin}{endpoint}{id}'")
+            while not event.is_set():
+                logger.debug(f"curl -i -X GET '{origin}{endpoint}{id}'")
                 event.wait(1)
                 try:
                     response = requests.request("GET", f"{origin}{endpoint}{id}", timeout=5)
+                    with Lock():
+                        responses_results.append(response)
                 except Exception as e:
                     logger.error(e)
-                logger.info(response.text)
-                with Lock():
-                    responses_results.append(response)
 
         event = Event()
         clients = [Thread(target=request_job, args=(origin, i, event), daemon=True)
@@ -72,6 +71,7 @@ class TestGetPeopleEndpointPerformance:
 
     def test_failures_after_spamming(self, spam_results):
         errors = [response for response in spam_results if response.status_code >= 500]
+        logging.info(f"Server failure rate (500 errors only): {round(len(errors)/len(spam_results) * 100, 2)}")
         grouped_errors = defaultdict(lambda: 0)
         for error in errors:
             grouped_errors[(error.status_code, error.text)] += 1
